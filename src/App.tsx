@@ -8,7 +8,7 @@ import { useApi } from "./hooks/useApi";
 import { useAuth } from "./hooks/useAuth";
 import { currentUserAtom } from "./store/user";
 
-// const Home = lazy(() => import("./screens/homepage"))
+const Home = lazy(() => import("./screens/homepage"))
 const CheckEmail = lazy(() => import("./screens/checkEmail"))
 const ForgotPassword = lazy(() => import("./screens/forgotPassword"))
 const Sign = lazy(() => import("./screens/sign"))
@@ -33,13 +33,14 @@ const App: FC = () => {
     // eslint-disable-next-line
   }, [user])
 
+
   return (
     <Container className="mt-5" maxWidth="xl">
       <Routes>
         <Route path="/sign" element={<RedirectRoute component={Sign} isObject={currentUser} />} />
         <Route path="/check-email" element={<CheckEmail />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        {/* <Route path="/" element={<PrivateRoute component={<Home />}/>} /> */}
+        <Route path="/" element={<PrivateRoute component={Home}/>} />
       </Routes>
     </Container>
   );
@@ -51,7 +52,7 @@ const PrivateRoute = ({ component: Component }:any) => {
   const location = useLocation()
 
   if (user) {
-    return  <Component />
+    return (<Component />)
   }
 
   return <Navigate to="/sign" state={{ from: `?next=${location.pathname}` }} />

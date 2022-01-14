@@ -10,7 +10,7 @@ export const useApi = () => {
 	const { getOAuthToken, getAccessToken, getAuthorization } = useAuth()
 
 
-    const Fetch = async (route:string, method:Method = 'GET', payload:any = {}, json:Boolean = true):Promise<any> => {
+    const Fetch = async (route:string, method:Method = 'GET', payload?:any, json:Boolean = true):Promise<any> => {
         setLoading(true)
         const headers:Header = {
 			Authorization: `Bearer ${getOAuthToken()}`,
