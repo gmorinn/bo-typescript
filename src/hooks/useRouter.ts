@@ -14,8 +14,9 @@ const useRouter = () => {
                 ...params, // useParam :id
             },
             location,
+            navigate,
         }
-    }, [params, location])
+    }, [params, location, navigate])
 }
 
 export default useRouter

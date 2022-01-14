@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from '@mui/material';
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -20,8 +19,8 @@ export const FormCheckEmail = () => {
     const router = useRouter()
     const { lost } = useAuth()
 
-    const checkMail = async (data:FormValues):Promise<any> => {
-        await lost(data)
+    const checkMail = async ({ email }:FormValues):Promise<any> => {
+        await lost(email)
             .then((res:any) => {
                 if (res?.success && res.exist) console.log("succeed!")
                 else { throw new Error("Email doesn't exist") }
@@ -59,7 +58,6 @@ export const FormCheckEmail = () => {
     const onSubmit: SubmitHandler<FormValues> = data => mutate(data);
 
     return (
-        <>
         <div className="mt-5">
             <form onSubmit={handleSubmit(onSubmit)} className="d-flex flex-column">
                 <div className="mb-5 w-75 mx-auto">
@@ -72,6 +70,5 @@ export const FormCheckEmail = () => {
                 </Button>
             </form>
         </div>
-        </>
     )
 };

@@ -257,7 +257,7 @@ function useProvideAuth() {
 			},
 			method: "POST",
 			body: JSON.stringify({
-				data
+				email: data
 			})
 		}).then(async resp => {
 			if (resp.status === 403) {
@@ -295,7 +295,7 @@ function useProvideAuth() {
 		})
 	};
 
-	const resetPassword = async (data:ResetPasswordProps):Promise<SuccessResult> => {
+	const resetPassword = async ({email, password, code, confirm_password}:ResetPasswordProps):Promise<SuccessResult> => {
 		setLoad(true)
 		return await fetch(`${api}/v1/reset-password`, {
 			headers: {
@@ -304,11 +304,14 @@ function useProvideAuth() {
 			},
 			method: "PUT",
 			body: JSON.stringify({
-				data
+				email,
+				password,
+				code,
+				confirm_password
 			})
 		}).then(async resp => {
 			if (resp.status === 403) {
-				await getAuthorization().then(async () => await resetPassword(data))
+				await getAuthorization().then(async () => await resetPassword({email, password, code, confirm_password}))
 			}
 			return await resp.json()
 		}).then(body => {

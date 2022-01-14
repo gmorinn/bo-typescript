@@ -1,5 +1,5 @@
 import { DatePicker, LocalizationProvider } from "@mui/lab";
-import { FormControl, Input, MenuItem, Select, TextField } from "@mui/material";
+import { FormControl, Input, MenuItem, Select, SxProps, TextField, Theme } from "@mui/material";
 import { Controller } from "react-hook-form";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import PhoneInput from "react-phone-input-2";
@@ -20,7 +20,9 @@ type FormProps = {
     select?: boolean,
     date?: boolean,
     number?: boolean,
+    css?: string | null,
     file?: boolean,
+    sx?: SxProps<Theme> | undefined,
     control?: any,
     format?: string | undefined,
     label?: string | undefined,
@@ -28,9 +30,9 @@ type FormProps = {
     other?: any | undefined,
 }
 
-const UseFormGroup = ({ bind, phone, select, date, number, file, control, ...other }:FormProps) => {
+const UseFormGroup = ({ bind, phone, select, date, number, file, control, css, sx, ...other }:FormProps) => {
     return (
-        <FormControl className="mt-5 w-100">
+        <FormControl className={`${css ? `${css}` : "mt-5 w-100"}`} sx={sx}>
             {
                 phone  ?  <InputPhone bind={bind} control={control} /> :
                 select ?  <InputSelect bind={bind} control={control} {...other} /> :
