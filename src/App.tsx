@@ -7,11 +7,16 @@ import { useRecoilState } from "recoil";
 import { useApi } from "./hooks/useApi";
 import { useAuth } from "./hooks/useAuth";
 import { currentUserAtom } from "./store/user";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import RoutesUsers from "./components/Users/RoutesUsers";
+import RoutesProducts from "./components/Products/RoutesProducts";
 
-const Home = lazy(() => import("./screens/homepage"))
 const CheckEmail = lazy(() => import("./screens/checkEmail"))
 const ForgotPassword = lazy(() => import("./screens/forgotPassword"))
 const Sign = lazy(() => import("./screens/sign"))
+const NotFound = lazy(() => import("./screens/notFound"))
+const Users = lazy(() => import("./components/Users/Users"))
 
 toast.configure();
 
@@ -37,10 +42,16 @@ const App: FC = () => {
   return (
     <Container className="mt-5" maxWidth="xl">
       <Routes>
-        <Route path="/sign" element={<RedirectRoute component={Sign} isObject={currentUser} />} />
-        <Route path="/check-email" element={<CheckEmail />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/" element={<PrivateRoute component={Home}/>} />
+        <Route path="/" element={<PrivateRoute component={Users}/>} />
+        <Route path="*" element={<Navigate to={"404"}/>} />
+        <Route path="404" element={<NotFound />} />
+
+        <Route path="sign" element={<RedirectRoute component={Sign} isObject={currentUser} />} />
+        <Route path="check-email" element={<CheckEmail />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+
+        <Route path="users/*" element={<PrivateRoute component={RoutesUsers}/>} />
+        <Route path="products/*" element={<PrivateRoute component={RoutesProducts}/>} />
       </Routes>
     </Container>
   );
@@ -52,7 +63,13 @@ const PrivateRoute = ({ component: Component }:any) => {
   const location = useLocation()
 
   if (user) {
-    return (<Component />)
+    return (
+      <>
+        <Header />
+          <Component />
+        <Footer />
+      </>
+    )
   }
 
   return <Navigate to="/sign" state={{ from: `?next=${location.pathname}` }} />

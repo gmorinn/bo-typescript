@@ -1,5 +1,5 @@
-import React, { lazy }  from "react";
-import { Route, Routes } from 'react-router-dom';
+import { lazy }  from "react";
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
 const Users = lazy(() => import('./Users'));
@@ -11,9 +11,15 @@ const RoutesUsers = () => {
 
     return (
         <Routes>
-			{user && usersRoutes.roles.includes(user.role) && <Route path="/users" element={<Users />} />}
-			{user && usersRoutes.roles.includes(user.role) && <Route path="/user/add" element={<AddUser />} />}
-			{user && usersRoutes.roles.includes(user.role) && <Route path="/user/edit/:id" element={<EditUser />} />}
+			{
+				user && usersRoutes.roles.includes(user.role) && 
+				<>
+					<Route path="/" element={<Users />} />
+					<Route path="add" element={<AddUser />} />
+					<Route path="edit/:id" element={<EditUser />} />
+					<Route path="*" element={<Navigate to={"/404"}/>} />
+				</>
+			}
 		</Routes>
     )
 }
@@ -21,9 +27,5 @@ const RoutesUsers = () => {
 export default RoutesUsers
 
 export const usersRoutes = {
-	name: 'Utilisateurs',
-	to: '/users',
-	exact: true,
-	icon: 'home',
 	roles: ["root", "admin"]
 };

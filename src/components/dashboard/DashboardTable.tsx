@@ -4,11 +4,11 @@ import DashboardHeader from "./DashboardHeader";
 import DashboardPagination from "./DashboardPagination";
 import DashboardHeaderFilter from "./DashboardHeaderFilter";
 
-const DashboardTable = ({ deleteItems, add, total, orderBy, setOrderBy, page, rowsPerPage, setRowsPerPage, setPage, order, setOrder, selected, setSelected, data, headCells, children }:any) => {
+const DashboardTable = ({ name, deleteItems, add, total, orderBy, setOrderBy, page, rowsPerPage, setRowsPerPage, setPage, order, setOrder, selected, setSelected, data, headCells, children }:any) => {
     return (
         <>
             <DashboardHeaderFilter 
-                title="Products"
+                title={name}
                 numSelected={selected.length} 
                 deleteItems={deleteItems}
                 add={add}

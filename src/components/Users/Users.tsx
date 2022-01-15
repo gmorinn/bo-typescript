@@ -97,6 +97,7 @@ const Users = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <DashboardTable
+        name="User"
         add="/user/add"
         deleteItems={deleteItems}
         order={order}
