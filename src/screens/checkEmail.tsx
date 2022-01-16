@@ -1,6 +1,6 @@
 import { Card, CardContent, Grid } from "@mui/material";
 import WhatshotIcon from '@mui/icons-material/Whatshot';
-import { FormCheckEmail } from "../components/auth/FormCheckEmail";
+import FormCheckEmail from "../components/auth/FormCheckEmail";
 import { FC } from "react";
 
 const ForgotPassword: FC = () => {

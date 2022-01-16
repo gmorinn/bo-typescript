@@ -45,10 +45,10 @@ const FormProduct = ({ add, edit, formData }:FormProductProps) => {
     const router = useRouter()
     let { id } = useParams<{id: string}>();
 
-    const name = useInput(formData && formData?.name ? formData.name : "", "name", "text", "Name...", "w-100")
-    const category = useInput(formData && formData?.category ? formData.category : "men", "category", "text", "Category...", "w-100")
-    const price = useInput(formData && formData?.price ? formData.price : 0.0, "price", "number", "Price", "w-100")
-    const cover = useInput(formData && formData?.cover ? formData.cover : "", "cover", "file", "", "w-100", {
+    const name = useInput(formData?.name || "", "name", "text", "Name...", "w-100")
+    const category = useInput(formData?.category || "men", "category", "text", "Category...", "w-100")
+    const price = useInput(formData?.price || 0.0, "price", "number", "Price", "w-100")
+    const cover = useInput(formData?.cover || "", "cover", "file", "", "w-100", {
         id:"input_image",
         accept:"image/png image/jpeg image/jpg",
     })

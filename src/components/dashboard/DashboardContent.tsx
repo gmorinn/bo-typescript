@@ -1,4 +1,4 @@
-import React, { ReactNode, SyntheticEvent } from "react";
+import { ReactNode, SyntheticEvent } from "react";
 import { Checkbox, IconButton, TableCell, TableRow } from "@mui/material";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import { useNavigate } from "react-router-dom";

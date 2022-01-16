@@ -3,14 +3,13 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { useMutation } from "react-query";
-import { toast } from 'react-toastify';
 import * as api from '../../utils/api'
 import useInput from "../../hooks/useInput";
 import useRouter from "../../hooks/useRouter";
+import UseFormGroup from '../../hooks/useForm';
 import { useAuth } from '../../hooks/useAuth'
 import Loader from '../Loader'
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail'
-import UseFormGroup from '../../hooks/useForm';
 import { FC } from 'react';
 import { displaySuccess } from '../../utils/toastMessage';
 
@@ -46,7 +45,6 @@ const FormLogin: FC = () => {
     const onSubmit:SubmitHandler<FormValues> = data => mutate({ email: data.email, password: data.password, loginBo });
 
     return (
-        <>
         <div className="mt-5">
             <form onSubmit={handleSubmit(onSubmit)} className="d-flex flex-column">
 
@@ -65,7 +63,6 @@ const FormLogin: FC = () => {
                 {isError && <span className="text-danger text-center mb-4">{typeof error === 'string' ? error : ''}</span>}
             </form>
         </div>
-        </>
     )
 }
 

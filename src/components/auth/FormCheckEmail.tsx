@@ -14,7 +14,7 @@ type FormValues = {
     email: string
 }
 
-export const FormCheckEmail = () => {
+const FormCheckEmail = () => {
 
     const router = useRouter()
     const { checkMailAndSendCode } = useAuth()
@@ -63,3 +63,5 @@ export const FormCheckEmail = () => {
         </div>
     )
 };
+
+export default FormCheckEmail

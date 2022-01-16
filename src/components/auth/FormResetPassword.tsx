@@ -3,13 +3,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { useMutation } from "react-query";
-import { toast } from 'react-toastify';
 import { useAuth } from "../../hooks/useAuth";
 import useInput from "../../hooks/useInput";
 import Loader from '../Loader'
 import useRouter from "../../hooks/useRouter";
 import UseFormGroup from "../../hooks/useForm";
 import { FC } from 'react';
+import { displaySuccess } from '../../utils/toastMessage';
 
 type FormValues = {
     email: string,
@@ -34,16 +34,7 @@ const FormResetPassword: FC = () => {
 
     const {isError, isLoading, mutate, error } = useMutation(resetPasswordWithCode, {
         onSuccess: () => {
-            toast.success("Password change!", {
-                position: "top-left",
-                autoClose: 3000,
-                theme: "dark",
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                });
+            displaySuccess("Password change!");
             router.push('/sign')
         },
     })
@@ -68,7 +59,6 @@ const FormResetPassword: FC = () => {
     const onSubmit: SubmitHandler<FormValues> = data => mutate(data);
 
     return (
-        <>
         <div className="mt-5">
             <form onSubmit={handleSubmit(onSubmit)} className="d-flex flex-column">
                 <Grid container rowSpacing={5} columnSpacing={{ xs: 2, sm: 5, md: 10, xl: 20 }}>
@@ -104,7 +94,6 @@ const FormResetPassword: FC = () => {
                 </Button>
             </form>
         </div>
-        </>
     )
 }
 

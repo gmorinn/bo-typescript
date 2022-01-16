@@ -21,7 +21,6 @@ const DashboardHeader = (props:any) => {
         setSelected([]);
       };
 
-
     const createSortHandler = (property:string) => (event:any) => handleRequestSort(event, property)
 
     return (
@@ -34,7 +33,7 @@ const DashboardHeader = (props:any) => {
                     checked={rowCount > 0 && numSelected === rowCount}
                     onChange={handleSelectAllClick}
                     inputProps={{
-                    'aria-label': 'select all desserts',
+                    'aria-label': 'select all',
                     }}
                 />
                 </TableCell>
