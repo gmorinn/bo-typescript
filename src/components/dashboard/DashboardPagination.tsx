@@ -1,3 +1,5 @@
+// DO NOT TOUCH THIS FILE
+
 import React, { SyntheticEvent } from "react";
 import { TableFooter, TablePagination, TableRow, Box, IconButton } from "@mui/material";
 import FirstPageIcon from '@mui/icons-material/FirstPage';
@@ -89,7 +91,7 @@ const DashboardPagination = ({ setPage, rowsPerPage, setRowsPerPage, page, total
         <TableFooter>
             <TableRow >
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25, { label: 'All', value: total }]}
+                    rowsPerPageOptions={[5, 10, 25]}
                     colSpan={12}
                     count={total}
                     rowsPerPage={rowsPerPage}

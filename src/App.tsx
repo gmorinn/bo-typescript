@@ -93,7 +93,6 @@ const PrivateRoute = ({ component: Component }:any) => {
       </>
     )
   }
-
   return <Navigate to="/sign" state={{ from: `?next=${location.pathname}` }} />
 };
 

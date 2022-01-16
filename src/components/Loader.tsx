@@ -2,7 +2,7 @@ import { CircularProgress } from '@mui/material';
 
 const Loader = () => {
     return (
-       <div className="d-flex justify-content-center align-items-center">
+       <div style={{position:'fixed', top: '50%', left: '50%', transform: "translate(-50%, -50%)"}}>
             <CircularProgress />
         </div>
     )

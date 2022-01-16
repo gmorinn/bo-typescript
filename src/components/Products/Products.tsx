@@ -37,7 +37,7 @@ export type DisplayProduct = {
 
 const Products = () => {
   const [data, setData] = useState<DisplayProduct[] | null>(null)
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState<number>(0);
   const { Fetch } = useApi()
   const [selected, setSelected] = useState<string[]>([] as string[]);
 
@@ -45,7 +45,7 @@ const Products = () => {
   const [page, setPage] = useState<number>(0);
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = useState<string>('name');
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [rowsPerPage, setRowsPerPage] = useState<5 | 10 | 25>(10);
   ////////////////////
 
   const deleteItems = () => {

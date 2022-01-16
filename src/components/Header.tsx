@@ -4,11 +4,11 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import useRouter from '../hooks/useRouter'
 import { useAuth } from '../hooks/useAuth'
 import MenuIcon from '@mui/icons-material/Menu';
-import { toast } from 'react-toastify';
 import { currentUserAtom } from '../store/user';
 import Navbar from './Navbar';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { darkModeAtom } from '../store/mode';
+import { displayError } from '../utils/toastMessage';
 
 const Header = () => {
   const router = useRouter()
@@ -21,15 +21,7 @@ const Header = () => {
   const Logout = () => {
     setCurrentUser(null)
     logout()
-    toast.info('Disconnected!', {
-      position: "top-left",
-      theme: "dark",
-      autoClose: 2000,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+    displayError('Disconnected!');
     router.push('/sign')
   }
 

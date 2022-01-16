@@ -15,7 +15,7 @@ const EditUser = () => {
     const { Fetch } = useApi()
 
     useEffect(() => {
-		!data && Fetch(`/v1/bo/user/${id}`, "GET").then(res => res?.success && setData(res.user))
+		!data && Fetch(`/v1/bo/user/${id}`, "GET").then(res => res?.success && setData(res?.user))
 		return () => setData(null)
 		// eslint-disable-next-line
 	}, [])

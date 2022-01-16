@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { toast } from 'react-toastify';
+import React, { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import { Button, Grid } from '@mui/material';
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -11,8 +10,8 @@ import { useApi } from "../../hooks/useApi";
 import Err from '../../utils/humanResp'
 import useRouter from "../../hooks/useRouter";
 import UseFormGroup from "../../hooks/useForm";
-import { useParams } from "react-router-dom";
-// import InputFileBrowser from "../../utils/InputFile";
+import { displaySuccess } from '../../utils/toastMessage'
+import InputFileBrowser from "../../utils/InputFile";
 
 export type FormCreateProduct = {
     name: string,
@@ -43,25 +42,21 @@ type ProductPayload = {
 const FormProduct = ({ add, edit, formData }:FormProductProps) => {
     const { Fetch } = useApi()
     const router = useRouter()
-    let { id } = useParams<{id: string}>();
 
     const name = useInput(formData?.name || "", "name", "text", "Name...", "w-100")
     const category = useInput(formData?.category || "men", "category", "text", "Category...", "w-100")
     const price = useInput(formData?.price || 0.0, "price", "number", "Price", "w-100")
-    const cover = useInput(formData?.cover || "", "cover", "file", "", "w-100", {
-        id:"input_image",
-        accept:"image/png image/jpeg image/jpg",
-    })
+    const [cover, setCover] = useState<string>(formData?.cover || "")
 
     const addProduct = async ({name, category, price}:ProductPayload) => {
         if (add && !edit) {
-            await Fetch('/v1/bo/product/add', "POST", {product: { name, category, price, cover: cover.value }}, true)
+            await Fetch('/v1/bo/product/add', "POST", {product: { name, category, price, cover: cover }}, true)
             .then(res => {
                 if (res?.success) console.log("succeed!")
                 else { throw Err(res) }
             })
         } else {
-            await Fetch(`/v1/bo/product/${id}`, "PUT", { product: { name, category, price, cover: cover.value } }, true)
+            await Fetch(`/v1/bo/product/${router.query?.id}`, "PUT", { product: { name, category, price, cover: cover } }, true)
                 .then(res => {
                     if (res?.success) console.log("succeed!")
                     else { throw Err(res) }
@@ -69,17 +64,9 @@ const FormProduct = ({ add, edit, formData }:FormProductProps) => {
         }
     }
 
-    const { isLoading, mutate, isError } = useMutation(addProduct, {
+    const { isLoading, mutate, isError, error } = useMutation(addProduct, {
         onSuccess: () => {
-            toast.success("Add!", {
-                position: "top-left",
-                autoClose: 3000,
-                theme: "dark",
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            displaySuccess("Add !")
             router.push('/products')
         }
     })
@@ -135,15 +122,16 @@ const FormProduct = ({ add, edit, formData }:FormProductProps) => {
                     {errors.price?.type === 'positive' && <span className="text-danger">Need to be more than 0</span>}
                 </Grid>
 
-                {/* <Grid item md={6} className="mb-3 w-100">
-                    <InputFileBrowser w={257} h={350} {...cover.bindFile} />
-                </Grid> */}
+                <Grid item md={6} className="mb-3 w-100">
+                    <InputFileBrowser w={257} h={350} id="cover" value={cover} className="w-100" limit={1048576} set={setCover}
+                        accept="image/png,image/jpeg,image/jpg" />
+                </Grid>
 
             </Grid>
             <Button size="small" className="w-50 mx-auto px-5 pt-3 pb-3 mb-2" type='submit' variant="contained" disabled={isLoading}>
                 {isLoading ? <Loader /> : <>{add ? "Add Product" : "Edit Product"}</>}
             </Button>
-            {isError && <span className="text-danger text-center">Erreur, retry!</span>}
+            {isError && <span className="text-danger text-center">{typeof error === 'string' && error}</span>}
         </form>
     )
 }

@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { toast } from 'react-toastify';
 import { useMutation } from "react-query";
 import { Button, Grid } from '@mui/material';
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -13,7 +12,7 @@ import useRouter from "../../hooks/useRouter";
 import Err from '../../utils/humanResp'
 import moment from "moment";
 import { Role } from "../../utils/types";
-import { useParams } from "react-router-dom";
+import { displaySuccess } from "../../utils/toastMessage";
 
 export type FormCreateUser = {
     firstname: string,
@@ -46,7 +45,6 @@ const defaultForm:FormCreateUser = {
 const FormUser = ({ add, edit, formData }:FormUserProps) => {
     const { Fetch } = useApi()
     const router = useRouter()
-    let { id } = useParams<{id: string}>();
 
     // FETCH TO CHANGE ITEM
     const setUser = async (data:FormCreateUser) => {
@@ -57,7 +55,7 @@ const FormUser = ({ add, edit, formData }:FormUserProps) => {
                     else { throw Err(res) }
                 })
         } else {
-            await Fetch(`/v1/bo/user/${id}`, "PUT", { User: data }, true)
+            await Fetch(`/v1/bo/user/${router.query?.id}`, "PUT", { User: data }, true)
                 .then(res => {
                     if (res?.success) console.log("succeed!")
                     else { throw Err(res) }
@@ -68,15 +66,7 @@ const FormUser = ({ add, edit, formData }:FormUserProps) => {
     // START REACT QUERY
     const { isLoading, mutate, isError, error } = useMutation(setUser, {
         onSuccess: () => {
-            toast.success("Success !", {
-                position: "top-left",
-                autoClose: 3000,
-                theme: "dark",
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            displaySuccess("Success")
             router.push('/users')
         }
     })
@@ -116,17 +106,18 @@ const FormUser = ({ add, edit, formData }:FormUserProps) => {
       }, [isSubmitSuccessful, reset]);
 
     // ALL INPUT USED
-    const firstname = useInput(formData ? formData.firstname : "", "firstname", "text", "Firstname...", "w-100")
-    const lastname = useInput(formData ? formData.lastname : "", "lastname", "text", "Lastname...", "w-100")
-    const email = useInput(formData ? formData.email : "", "email", "email", "Email...", "w-100")
+    const firstname = useInput(formData?.firstname || "", "firstname", "text", "Firstname...", "w-100")
+    const lastname = useInput(formData?.lastname || "", "lastname", "text", "Lastname...", "w-100")
+    const email = useInput(formData?.email || "", "email", "email", "Email...", "w-100")
     const password = useInput("", "password", "password", "Password...", "w-100")
     const confirm_password = useInput("", "confirm_password", "password", "Confirm password...", "w-100")
-    const phone = useInput(formData ? formData.phone : null, "phone", "phone", "Phone number...", "w-100")
-    const role = useInput(formData ? formData.role : "user", "role", "text", "Role...", "w-100")
-    const birthday = useInput(formData ? moment(new Date(formData.birthday)) : null, "birthday", "date", "Birthday...", "w-100")
+    const phone = useInput(formData?.phone || null, "phone", "phone", "Phone number...", "w-100")
+    const role = useInput(formData?.role || "user", "role", "text", "Role...", "w-100")
+    const birthday = useInput(formData?.birthday ? moment(new Date(formData?.birthday || 0)) : "", "birthday", "date", "Birthday...", "w-100")
 
     // JSON SEND TO THE API
     const onSubmit:SubmitHandler<FormCreateUser> = data => mutate(data);
+
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="d-flex flex-column">

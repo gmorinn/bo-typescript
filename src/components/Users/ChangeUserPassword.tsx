@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { toast } from 'react-toastify';
 import { useMutation } from "react-query";
 import { Button, Grid } from '@mui/material';
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -7,10 +6,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import useInput from "../../hooks/useInput";
 import Loader from '../Loader'
+import { displaySuccess } from '../../utils/toastMessage'
 import useRouter from "../../hooks/useRouter";
 import Err from '../../utils/humanResp'
 import { useAuth } from "../../hooks/useAuth";
-import { useParams } from "react-router-dom";
 import UseFormGroup from "../../hooks/useForm";
 
 type FormValues = {
@@ -27,11 +26,10 @@ const ChangeUserPassword = () => {
     const { newPassword } = useAuth()
 
     const router = useRouter()
-    let { id } = useParams<{id: string}>();
 
     // FETCH TO CHANGE ITEM
     const changePassword = async ({ password, confirm }:FormValues):Promise<any> => {
-        await newPassword(password, confirm, id)
+        await newPassword(password, confirm, router.query?.id)
             .then((res:any) => {
                 if (res?.success) console.log("succeed!")
                 else { throw Err(res) }
@@ -41,15 +39,7 @@ const ChangeUserPassword = () => {
     // START REACT QUERY
     const { isLoading, mutate, isError, error } = useMutation(changePassword, {
         onSuccess: () => {
-            toast.success("Success !", {
-                position: "top-left",
-                autoClose: 3000,
-                theme: "dark",
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            displaySuccess("Success !");
             router.push('/users')
         }
     })

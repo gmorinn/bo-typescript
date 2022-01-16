@@ -1,3 +1,5 @@
+// DO NOT TOUCH THIS FILE
+
 import { ReactNode, SyntheticEvent } from "react";
 import { Checkbox, IconButton, TableCell, TableRow } from "@mui/material";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
@@ -14,7 +16,7 @@ type DashboardContentProps = {
   children: ReactNode
 }
 
-const DashboardContent = ({ selected, isItemSelected, row, labelId, edit, setSelected, key, children }:DashboardContentProps) => {
+const DashboardContent = ({ selected, isItemSelected, row, labelId, edit, setSelected, children }:DashboardContentProps) => {
     const navigate = useNavigate()
     const handleClick = (event:SyntheticEvent, id:string) => {
       const selectedIndex = selected.indexOf(id);
