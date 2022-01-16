@@ -248,7 +248,7 @@ function useProvideAuth() {
 		setUser(() => null)
 	};
 
-	const lost = async (data:string):Promise<ResultSendCodeConfirmation> => {
+	const checkMailAndSendCode = async (data:string):Promise<ResultSendCodeConfirmation> => {
 		setLoad(true)
 		return await fetch(`${api}/v1/lost`, {
 			headers: {
@@ -261,7 +261,7 @@ function useProvideAuth() {
 			})
 		}).then(async resp => {
 			if (resp.status === 403) {
-				await getAuthorization().then(async () => await lost(data))
+				await getAuthorization().then(async () => await checkMailAndSendCode(data))
 			}
 			return await resp.json()
 		}).then(body => {
@@ -344,7 +344,7 @@ function useProvideAuth() {
 		login,
 		logout,
 		resetPassword,
-		lost,
+		checkMailAndSendCode,
 		newPassword,
 	};
 }

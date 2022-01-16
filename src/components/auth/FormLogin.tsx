@@ -12,6 +12,7 @@ import Loader from '../Loader'
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail'
 import UseFormGroup from '../../hooks/useForm';
 import { FC } from 'react';
+import { displaySuccess } from '../../utils/toastMessage';
 
 type FormValues = {
     email: string,
@@ -25,15 +26,7 @@ const FormLogin: FC = () => {
 
     const {isError, isLoading, mutate, error } = useMutation(api.SigninWithMailAndPassword, {
         onSuccess: () => {
-            toast.success("You're connected!", {
-                position: "top-left",
-                autoClose: 3000,
-                theme: "dark",
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            displaySuccess("You're connected!")
             router.push('/')
         },
     })

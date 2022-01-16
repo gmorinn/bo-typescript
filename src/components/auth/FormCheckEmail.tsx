@@ -2,13 +2,13 @@ import { Button } from '@mui/material';
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation } from "react-query";
-import { toast } from 'react-toastify';
 import { useAuth } from "../../hooks/useAuth";
 import * as yup from "yup";
 import useInput from "../../hooks/useInput";
 import useRouter from "../../hooks/useRouter";
 import Loader from '../Loader'
 import UseFormGroup from "../../hooks/useForm";
+import { displayError } from '../../utils/toastMessage';
 
 type FormValues = {
     email: string
@@ -17,10 +17,10 @@ type FormValues = {
 export const FormCheckEmail = () => {
 
     const router = useRouter()
-    const { lost } = useAuth()
+    const { checkMailAndSendCode } = useAuth()
 
     const checkMail = async ({ email }:FormValues):Promise<any> => {
-        await lost(email)
+        await checkMailAndSendCode(email)
             .then((res:any) => {
                 if (res?.success && res.exist) console.log("succeed!")
                 else { throw new Error("Email doesn't exist") }
@@ -32,16 +32,7 @@ export const FormCheckEmail = () => {
             router.push('/forgot-password')
         },
         onError: () => {
-            toast.error("Email doesn't exist!", {
-                position: "top-left",
-                autoClose: 3000,
-                theme: "dark",
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            displayError("Email doesn't exist!");
         }
     })
 

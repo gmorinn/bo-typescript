@@ -1,6 +1,7 @@
 import { lazy }  from "react";
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import NotFound from '../../screens/notFound'
 
 const Products = lazy(() => import('./Products'));
 const AddProduct = lazy(() => import('./AddProduct'));
@@ -17,7 +18,7 @@ const RoutesProducts = () => {
 				<Route path="/" element={<Products />} />
 				<Route path="add" element={<AddProduct />} />
 				<Route path="edit/:id" element={<EditProduct />} />
-				<Route path="*" element={<Navigate to={"/404"}/>} />
+				<Route path="*" element={<NotFound />} />
 			</>
 		}
 		</Routes>

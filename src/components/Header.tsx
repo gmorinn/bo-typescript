@@ -6,6 +6,7 @@ import { useAuth } from '../hooks/useAuth'
 import MenuIcon from '@mui/icons-material/Menu';
 import { toast } from 'react-toastify';
 import { currentUserAtom } from '../store/user';
+import Navbar from './Navbar';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { darkModeAtom } from '../store/mode';
 
@@ -15,7 +16,7 @@ const Header = () => {
   const [currentUser, setCurrentUser] = useRecoilState(currentUserAtom)
   const mode = useRecoilValue(darkModeAtom)
 
-  const [isDrawerOpen, setDrawerOpen] = useState<Boolean>(false);
+  const [isDrawerOpen, setDrawerOpen] = useState<boolean>(false);
 
   const Logout = () => {
     setCurrentUser(null)
@@ -45,7 +46,7 @@ const Header = () => {
               >
                 <MenuIcon />
               </IconButton>
-              {/* <Navbar open={isDrawerOpen} toggleDrawerHandler={() => setDrawerOpen(false)} /> */}
+              <Navbar open={isDrawerOpen} toggleDrawerHandler={() => setDrawerOpen(false)} />
             </Typography>
               <LocalFireDepartmentIcon sx={{ color: `${!mode && "black"}`, cursor: 'pointer' }} onClick={() => router.push('/')}/>
               {

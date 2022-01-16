@@ -97,8 +97,8 @@ const Users = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <DashboardTable
-        name="User"
-        add="/user/add"
+        name="Users"
+        add="/users/add"
         deleteItems={deleteItems}
         order={order}
         total={total}
@@ -123,7 +123,7 @@ const Users = () => {
                 key={row.id}
                 isItemSelected={selected.indexOf(row?.id) !== -1}
                 labelId={`checkbox-${index}`}
-                edit={`/user/edit/${row.id}`}
+                edit={`/users/edit/${row.id}`}
               >
                       <TableCell
                         component="th"

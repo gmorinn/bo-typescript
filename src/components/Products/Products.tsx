@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, ColorFormat, TableCell } from '@mui/material';
+import { Box, TableCell } from '@mui/material';
 import { useApi } from '../../hooks/useApi';
 import DashboardTable from '../dashboard/DashboardTable';
 import useUpdateEffect from '../../hooks/useUpdateEffect'
@@ -76,7 +76,7 @@ const Products = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <DashboardTable
-        add="/product/add"
+        add="/products/add"
         deleteItems={deleteItems}
         order={order}
         total={total}
@@ -101,7 +101,7 @@ const Products = () => {
                 key={row.id}
                 isItemSelected={selected.indexOf(row.id) !== -1}
                 labelId={`checkbox-${index}`}
-                edit={`/product/edit/${row.id}`}
+                edit={`/products/edit/${row.id}`}
               >
 
                 <TableCell component="th" id={`checkbox-${index}`} scope="row" padding="none">
