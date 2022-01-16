@@ -36,10 +36,10 @@ export type DisplayProduct = {
 }
 
 const Products = () => {
-  const [data, setData] = useState<DisplayProduct[] | null>(null)
   const [total, setTotal] = useState<number>(0);
-  const { Fetch } = useApi()
+  const [data, setData] = useState<DisplayProduct[] | null>(null)
   const [selected, setSelected] = useState<string[]>([] as string[]);
+  const { Fetch } = useApi()
 
   //// PAGINATION ////
   const [page, setPage] = useState<number>(0);

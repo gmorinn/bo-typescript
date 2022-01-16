@@ -4,15 +4,10 @@ export type Role = 'user' | 'admin' | 'pro'
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
-export type ErrorAPI = {
-    err?: string,
-    error_code?: string,
-    message?: string,
-    name?: string,
-}
-
-export type SuccessResult = {
-    success?: boolean,
+export type Header = {
+    Authorization?: string,
+    jwtToken?: string,
+    "Content-Type"?: string,
 }
 
 export type User = {
@@ -24,10 +19,15 @@ export type User = {
     Role: Role
 }
 
-export type Header = {
-    Authorization?: string,
-    jwtToken?: string,
-    "Content-Type"?: string,
+export type ErrorAPI = {
+    err?: string,
+    error_code?: string,
+    message?: string,
+    name?: string,
+}
+
+export type SuccessResult = {
+    success?: boolean,
 }
 
 export type ResetPasswordProps = {
