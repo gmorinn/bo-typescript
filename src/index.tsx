@@ -6,7 +6,6 @@ import { BrowserRouter } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
 import ErrorBoundary from "./screens/errorBoundary";
 
-import { QueryClient, QueryClientProvider } from 'react-query';
 import Loader from './components/Loader';
 import { ProvideAuth } from './hooks/useAuth';
 
@@ -16,17 +15,13 @@ const g = "color:#00000;font-weight:bold;font-size:18px;";
 const hello = `%c 🤙 https://guillaume-morin.fr/`;
 console.info(hello, g);
 
-const queryClient = new QueryClient()
-
 ReactDOM.render(
   <ErrorBoundary>
     <Suspense fallback={<Loader />}>
       <ProvideAuth>
         <RecoilRoot>
           <BrowserRouter>
-            <QueryClientProvider client={queryClient}>
               <App />
-            </QueryClientProvider>
         </BrowserRouter>
         </RecoilRoot>
       </ProvideAuth>

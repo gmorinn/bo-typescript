@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useMutation } from "react-query";
+import { useEffect, useState } from "react";
 import { Button, Grid } from '@mui/material';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -40,36 +39,14 @@ type ProductPayload = {
 }
 
 const FormProduct = ({ add, edit, formData }:FormProductProps) => {
-    const { Fetch } = useApi()
+    const { Fetch, loading } = useApi()
     const router = useRouter()
+    const [error, setError] = useState<string | null>(null)
 
     const name = useInput(formData?.name || "", "name", "text", "Name...", "w-100")
     const category = useInput(formData?.category || "men", "category", "text", "Category...", "w-100")
     const price = useInput(formData?.price || 0.0, "price", "number", "Price", "w-100")
     const [cover, setCover] = useState<string>(formData?.cover || "")
-
-    const addProduct = async ({name, category, price}:ProductPayload) => {
-        if (add && !edit) {
-            await Fetch('/v1/bo/product/add', "POST", {product: { name, category, price, cover: cover }}, true)
-            .then(res => {
-                if (res?.success) console.log("succeed!")
-                else { throw Err(res) }
-            })
-        } else {
-            await Fetch(`/v1/bo/product/${router.query?.id}`, "PUT", { product: { name, category, price, cover: cover } }, true)
-                .then(res => {
-                    if (res?.success) console.log("succeed!")
-                    else { throw Err(res) }
-                })
-        }
-    }
-
-    const { isLoading, mutate, isError, error } = useMutation(addProduct, {
-        onSuccess: () => {
-            displaySuccess("Add !")
-            router.push('/products')
-        }
-    })
 
     const schema = yup.object({
         name: yup.string().min(3).required(),
@@ -89,7 +66,27 @@ const FormProduct = ({ add, edit, formData }:FormProductProps) => {
       }, [isSubmitSuccessful, reset]);
 
 
-    const onSubmit:SubmitHandler<FormCreateProduct> = data => mutate(data);
+    const onSubmit:SubmitHandler<FormCreateProduct> = async ({name, category, price}:ProductPayload) => {
+        if (add && !edit) {
+            await Fetch('/v1/bo/product/add', "POST", {product: { name, category, price, cover: cover }}, true)
+            .then(res => {
+                if (res?.success) {
+                    displaySuccess("Add !")
+                    router.push('/products')
+                }
+                else setError(Err(res))
+            })
+        } else {
+            await Fetch(`/v1/bo/product/${router.query?.id}`, "PUT", { product: { name, category, price, cover: cover } }, true)
+                .then(res => {
+                    if (res?.success) {
+                        displaySuccess("Edit !")
+                        router.push('/products')
+                    }
+                    else setError(Err(res))
+                })
+        }
+    }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="d-flex flex-column mt-5">
@@ -128,10 +125,10 @@ const FormProduct = ({ add, edit, formData }:FormProductProps) => {
                 </Grid>
 
             </Grid>
-            <Button size="small" className="w-50 mx-auto px-5 pt-3 pb-3 mb-2" type='submit' variant="contained" disabled={isLoading}>
-                {isLoading ? <Loader /> : <>{add ? "Add Product" : "Edit Product"}</>}
+            <Button size="small" className="w-50 mx-auto px-5 pt-3 pb-3 mb-2" type='submit' variant="contained" disabled={loading}>
+                {loading ? <Loader /> : <>{add ? "Add Product" : "Edit Product"}</>}
             </Button>
-            {isError && <span className="text-danger text-center">{typeof error === 'string' && error}</span>}
+            {error && <span className="text-danger text-center">{error}</span>}
         </form>
     )
 }

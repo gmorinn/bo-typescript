@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useMutation } from "react-query";
+import { useEffect, useState } from "react";
 import { Button, Grid } from '@mui/material';
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -43,33 +42,9 @@ const defaultForm:FormCreateUser = {
 }
 
 const FormUser = ({ add, edit, formData }:FormUserProps) => {
-    const { Fetch } = useApi()
+    const { Fetch, loading } = useApi()
     const router = useRouter()
-
-    // FETCH TO CHANGE ITEM
-    const setUser = async (data:FormCreateUser) => {
-        if (add && !edit) {
-            await Fetch('/v1/bo/user/add', "POST", data, true)
-                .then(res => {
-                    if (res?.success) console.log("succeed!")
-                    else { throw Err(res) }
-                })
-        } else {
-            await Fetch(`/v1/bo/user/${router.query?.id}`, "PUT", { User: data }, true)
-                .then(res => {
-                    if (res?.success) console.log("succeed!")
-                    else { throw Err(res) }
-                })
-        }
-    }
-
-    // START REACT QUERY
-    const { isLoading, mutate, isError, error } = useMutation(setUser, {
-        onSuccess: () => {
-            displaySuccess("Success")
-            router.push('/users')
-        }
-    })
+    const [error, setError] = useState<string | null>(null)
 
     // ADD VALIDATION
     const AddSchema = yup.object({
@@ -92,20 +67,17 @@ const FormUser = ({ add, edit, formData }:FormUserProps) => {
         role: yup.string().oneOf(["user", "pro", "admin"]).required(),
     });
 
-    // START HOOK FORM
     const { handleSubmit, control, reset, formState: { errors, isSubmitSuccessful } } = useForm<FormCreateUser>({
         resolver: yupResolver(add ? AddSchema : EditSchema),
         defaultValues: formData || defaultForm
     });
 
-    //RESET FORM
     useEffect(() => {
         if (isSubmitSuccessful) {
           reset(defaultForm);
         }
       }, [isSubmitSuccessful, reset]);
 
-    // ALL INPUT USED
     const firstname = useInput(formData?.firstname || "", "firstname", "text", "Firstname...", "w-100")
     const lastname = useInput(formData?.lastname || "", "lastname", "text", "Lastname...", "w-100")
     const email = useInput(formData?.email || "", "email", "email", "Email...", "w-100")
@@ -115,9 +87,27 @@ const FormUser = ({ add, edit, formData }:FormUserProps) => {
     const role = useInput(formData?.role || "user", "role", "text", "Role...", "w-100")
     const birthday = useInput(formData?.birthday ? moment(new Date(formData?.birthday || 0)) : "", "birthday", "date", "Birthday...", "w-100")
 
-    // JSON SEND TO THE API
-    const onSubmit:SubmitHandler<FormCreateUser> = data => mutate(data);
-
+    const onSubmit:SubmitHandler<FormCreateUser> = async (data:FormCreateUser) => {
+        if (add && !edit) {
+            await Fetch('/v1/bo/user/add', "POST", data, true)
+                .then(res => {
+                    if (res?.success  && res.success) {
+                        displaySuccess("Success")
+                        router.push('/users')
+                    }
+                    else setError(Err(res))
+                })
+        } else {
+            await Fetch(`/v1/bo/user/${router.query?.id}`, "PUT", { User: data }, true)
+                .then(res => {
+                    if (res?.success && res.success) {
+                        displaySuccess("Success")
+                        router.push('/users')
+                    }
+                    else setError(Err(res))
+                })
+        }
+    }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="d-flex flex-column">
@@ -183,10 +173,10 @@ const FormUser = ({ add, edit, formData }:FormUserProps) => {
                 }
             </Grid>
 
-            <Button size="small" className="w-50 mx-auto px-5 pt-3 pb-3 mb-2" type='submit' variant="contained" disabled={isLoading}>
-                {isLoading ? <Loader /> : <>{add ? "Add User" : "Edit User"}</>}
+            <Button size="small" className="w-50 mx-auto px-5 pt-3 pb-3 mb-2" type='submit' variant="contained" disabled={loading}>
+                {loading ? <Loader /> : <>{add ? "Add User" : "Edit User"}</>}
             </Button>
-            {isError && <span className="text-danger text-center">{typeof error === "string" && error}</span>}
+            {error && <span className="text-danger text-center">{error}</span>}
         </form>
     )
 }

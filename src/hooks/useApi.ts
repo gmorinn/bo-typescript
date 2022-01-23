@@ -5,7 +5,7 @@ import { Header, Method } from "../utils/types";
 const api = process.env.REACT_APP_API_URL
 
 export const useApi = () => {
-    const [loading, setLoading] = useState<Boolean>(true)
+    const [loading, setLoading] = useState<boolean>(false)
 
 	const { getOAuthToken, getAccessToken, getAuthorization } = useAuth()
 

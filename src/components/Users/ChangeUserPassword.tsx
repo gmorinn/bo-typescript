@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useMutation } from "react-query";
+import { useEffect, useState } from "react";
 import { Button, Grid } from '@mui/material';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -23,54 +22,40 @@ const defaultForm = {
 }
 
 const ChangeUserPassword = () => {
-    const { newPassword } = useAuth()
-
+    const { newPassword, load } = useAuth()
+    const [error, setError] = useState<string | null>(null)
     const router = useRouter()
 
-    // FETCH TO CHANGE ITEM
-    const changePassword = async ({ password, confirm }:FormValues):Promise<any> => {
-        await newPassword(password, confirm, router.query?.id)
-            .then((res:any) => {
-                if (res?.success) console.log("succeed!")
-                else { throw Err(res) }
-            })
-    }
-
-    // START REACT QUERY
-    const { isLoading, mutate, isError, error } = useMutation(changePassword, {
-        onSuccess: () => {
-            displaySuccess("Success !");
-            router.push('/users')
-        }
-    })
-
-    // ADD VALIDATION
     const schema = yup.object({
         password: yup.string().required().min(7),
         confirm: yup.string().required().min(7)
             .oneOf([yup.ref('password'), null], 'Password is different.'),
       });
 
-
-    // START HOOK FORM
     const { handleSubmit, control, reset, formState: { errors, isSubmitSuccessful } } = useForm<FormValues>({
         resolver: yupResolver(schema),
         defaultValues: defaultForm
     });
 
-    // RESET FORM
     useEffect(() => {
         if (isSubmitSuccessful) {
           reset(defaultForm);
         }
       }, [isSubmitSuccessful, reset]);
 
-    // ALL INPUT USED
     const password = useInput("", "password", "password", "Password...", "w-100")
     const confirm = useInput("", "confirm", "password", "Confirm password...", "w-100")
 
-    // JSON SEND TO THE API
-    const onSubmit:SubmitHandler<FormValues> = data => mutate(data)
+    const onSubmit:SubmitHandler<FormValues> = async ({ password, confirm }:FormValues):Promise<any> => {
+        await newPassword(password, confirm, router.query?.id)
+            .then((res:any) => {
+                if (res?.success) {
+                    displaySuccess("Success !");
+                    router.push('/users')
+                }
+                else setError(Err(res))
+            })
+    }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="d-flex flex-column">
@@ -88,10 +73,10 @@ const ChangeUserPassword = () => {
                 </Grid>
             </Grid>
 
-            <Button size="small" className="w-50 mx-auto px-5 pt-3 pb-3 mb-2" type='submit' variant="contained" disabled={isLoading}>
-                {isLoading ? <Loader /> : <>Change Password</>}
+            <Button size="small" className="w-50 mx-auto px-5 pt-3 pb-3 mb-2" type='submit' variant="contained" disabled={load}>
+                {load ? <Loader /> : <>Change Password</>}
             </Button>
-            {isError && <span className="text-danger text-center">{typeof error === "string" && error}</span>}
+            {error && <span className="text-danger text-center">{error}</span>}
         </form>
     )
 }
